@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>MVR: Multi-view Video Reward Shaping for Reinforcement Learning</title>
+    <meta
+      name="description"
+      content="MVR learns state relevance from multi-view video-text similarity and uses state-dependent reward shaping to guide reinforcement learning."
+    />
+
+    <meta property="og:title" content="MVR: Multi-view Video Reward Shaping for Reinforcement Learning" />
+    <meta
+      property="og:description"
+      content="Learn state relevance from multi-view videos, then shape rewards to guide RL early and fade out as behavior improves."
+    />
+    <meta property="og:type" content="website" />
+
+    <link rel="icon" href="images/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="index.css" />
+
+    <script defer src="js/main.js"></script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+
+    <div class="container page-container">
+      <div class="top-nav">
+        <div class="top-nav-inner px-3 py-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
+          <div class="d-flex align-items-center gap-2">
+            <span class="nav-brand">MVR</span>
+            <span class="pill-hint">Project Page</span>
+          </div>
+          <div class="d-flex align-items-center gap-1 flex-wrap">
+            <a class="nav-pill" href="#tldr">TL;DR</a>
+            <a class="nav-pill" href="#overview">Overview</a>
+            <a class="nav-pill" href="#method">Method</a>
+            <a class="nav-pill" href="#results">Results</a>
+            <a class="nav-pill" href="#bibtex">BibTeX</a>
+          </div>
+        </div>
+      </div>
+
+      <header class="py-4">
+        <div class="hero-card">
+          <div class="hero-title">
+            <div class="kicker">Reinforcement Learning · Vision-Language Models · Reward Shaping · Multi-view Video</div>
+            <h1 class="display-title">MVR: Multi-view Video Reward Shaping for Reinforcement Learning</h1>
+            <div class="hero-subtitle">Learn state relevance from multi-view videos, then shape rewards to guide RL early and fade out as behavior improves.</div>
+          </div>
+
+          <div class="hero-links">
+            <a class="btn btn-outline-primary btn-sm" href="assets/MVR_ICLR2026.pdf">
+              <i class="ai ai-open-access"></i>
+              Paper (PDF)
+            </a>
+            <a class="btn btn-outline-primary btn-sm disabled" href="#" aria-disabled="true" tabindex="-1">
+              <i class="fab fa-github"></i>
+              Code (TBA)
+            </a>
+            <a class="btn btn-outline-primary btn-sm disabled" href="#" aria-disabled="true" tabindex="-1">
+              <i class="ai ai-openreview"></i>
+              OpenReview (TBA)
+            </a>
+            <a class="btn btn-outline-primary btn-sm disabled" href="#" aria-disabled="true" tabindex="-1">
+              <i class="ai ai-arxiv"></i>
+              arXiv (TBA)
+            </a>
+          </div>
+
+          <div class="hero-authors">
+            <div class="authors">
+              <span><a href="https://liruiluo.github.io/" target="_blank" rel="noreferrer">Lirui Luo</a></span>
+              <span>·</span>
+              <span><a href="https://guoxizhang.com/" target="_blank" rel="noreferrer">Guoxi Zhang</a></span>
+              <span>·</span>
+              <span><a href="https://sbx126.github.io/" target="_blank" rel="noreferrer">Hongming Xu</a></span>
+              <span>·</span>
+              <span><a href="https://www.yangyaodong.com/" target="_blank" rel="noreferrer">Yaodong Yang</a></span>
+              <span>·</span>
+              <span><a href="https://congfang-ml.github.io/" target="_blank" rel="noreferrer">Cong Fang</a></span>
+              <span>·</span>
+              <span><a href="https://liqing.io" target="_blank" rel="noreferrer">Qing Li</a></span>
+            </div>
+            <div class="affiliations">
+              <span>Accepted at ICLR 2026</span>
+              <span>·</span>
+              <span>Peking University</span>
+              <span>·</span>
+              <span>BIGAI</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main id="content" class="pb-5">
+        <section class="section-card" id="tldr">
+          <h2 class="section-title">TL;DR</h2>
+          <p class="section-text mb-0">
+            MVR uses a frozen video-language model to score multi-view videos of agent behavior, learns a state-space relevance function via paired-comparison
+            matching and representation regularization, and turns it into state-dependent reward shaping that automatically reduces VLM influence once the
+            desired motion pattern is achieved.
+          </p>
+        </section>
+
+        <section class="section-card" id="overview">
+          <h2 class="section-title">Overview</h2>
+
+          <div class="figure-card mb-3">
+            <div class="figure-title">Why multi-view videos?</div>
+            <img class="img-fluid rounded" src="figures/teaser.png" alt="MVR teaser figure" />
+            <div class="figure-caption">
+              Multi-view videos reduce occlusion and help evaluate dynamic motions. MVR shapes rewards to encourage desired motion patterns early, and then lets
+              task rewards dominate once the pattern is learned.
+            </div>
+          </div>
+
+          <div class="callouts">
+            <div class="callout">
+              <div class="k">Challenge</div>
+              <div class="v">Image-text similarity struggles with dynamic skills and can be viewpoint-biased; naively adding VLM scores can change the optimal policy.</div>
+            </div>
+            <div class="callout">
+              <div class="k">Key Idea</div>
+              <div class="v">Learn a state relevance model from multi-view video-text similarity without regressing raw scores, by matching paired comparisons.</div>
+            </div>
+            <div class="callout">
+              <div class="k">Reward Shaping</div>
+              <div class="v">Use a state-dependent shaping term that guides exploration early and automatically decays once behaviors align with a reference set.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-card" id="method">
+          <h2 class="section-title">Method</h2>
+
+          <p class="section-text">
+            MVR periodically renders recent trajectories into videos from multiple viewpoints, queries a video-language model for similarity and embeddings, and
+            uses them to update a state-space relevance function. The learned relevance then produces a shaped reward used by an online off-policy RL agent.
+          </p>
+
+          <div class="figure-card">
+            <div class="figure-title">MVR framework</div>
+            <img class="img-fluid rounded" src="figures/framework.png" alt="MVR framework figure" />
+            <div class="figure-caption">
+              State relevance learning (paired-comparison matching + representation regularization) + policy learning with a shaped reward that uses a reference set.
+            </div>
+          </div>
+
+          <div class="row g-3 mt-1">
+            <div class="col-12 col-lg-6">
+              <div class="figure-card h-100">
+                <div class="figure-title">State relevance learning</div>
+                <p class="section-text mb-0">
+                  To bridge the semantic gap between states and videos, MVR preserves the ordering induced by video-text similarity via a Bradley–Terry model, rather
+                  than regressing raw similarity scores in state space.
+                </p>
+              </div>
+            </div>
+            <div class="col-12 col-lg-6">
+              <div class="figure-card h-100">
+                <div class="figure-title">State-dependent reward shaping</div>
+                <p class="section-text mb-0">
+                  Visual guidance encourages reaching relevant states but weakens as the policy becomes “indistinguishable” from high-scoring reference behaviors,
+                  preventing persistent conflict with task objectives.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-card" id="results">
+          <h2 class="section-title">Results</h2>
+          <p class="section-text">
+            We evaluate MVR on 19 robotics tasks from HumanoidBench (humanoid locomotion) and MetaWorld (manipulation). Below are selected figures from the paper.
+          </p>
+
+          <div class="row g-3">
+            <div class="col-12 col-lg-6">
+              <div class="figure-card h-100">
+                <div class="figure-title">Tasks</div>
+                <img class="img-fluid rounded" src="figures/tasks.png" alt="Tasks figure" />
+              </div>
+            </div>
+            <div class="col-12 col-lg-6">
+              <div class="figure-card h-100">
+                <div class="figure-title">Ablation</div>
+                <img class="img-fluid rounded" src="figures/ablation.png" alt="Ablation figure" />
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="figure-card">
+                <div class="figure-title">Case study: identifying suboptimal states</div>
+                <img class="img-fluid rounded" src="figures/demo.png" alt="Demo figure" />
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="figure-card">
+                <div class="figure-title">Learning objective for relevance</div>
+                <img class="img-fluid rounded" src="figures/loss.png" alt="Loss figure" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-card" id="bibtex">
+          <h2 class="section-title">BibTeX</h2>
+          <div class="bibtex-toolbar">
+            <div class="footer-note">If you find this work useful, please cite:</div>
+            <button id="copyBibBtn" class="btn btn-sm btn-primary" type="button">
+              <i class="fa-regular fa-copy"></i>
+              Copy
+            </button>
+          </div>
+          <div class="codebox">
+            <pre id="bibtexBlock">@inproceedings{luo2026mvr,
+  title        = {MVR: Multi-view Video Reward Shaping for Reinforcement Learning},
+  author       = {Luo, Lirui and Zhang, Guoxi and Xu, Hongming and Yang, Yaodong and Fang, Cong and Li, Qing},
+  booktitle    = {International Conference on Learning Representations},
+  year         = {2026}
+}</pre>
+          </div>
+        </section>
+
+        <section class="section-card" id="contact">
+          <h2 class="section-title">Contact</h2>
+          <p class="section-text mb-0">
+            Corresponding authors: <a href="mailto:fangcong@pku.edu.cn">fangcong@pku.edu.cn</a> and
+            <a href="mailto:dylan.liqing@gmail.com">dylan.liqing@gmail.com</a>.
+          </p>
+        </section>
+
+        <div class="mt-4 footer-note">
+          Built as a static site for GitHub Pages.
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
+
