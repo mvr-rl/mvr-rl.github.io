@@ -8,13 +8,13 @@
     <title>MVR: Multi-view Video Reward Shaping for Reinforcement Learning</title>
     <meta
       name="description"
-      content="MVR learns state relevance from multi-view video-text similarity and uses state-dependent reward shaping to guide reinforcement learning."
+      content="MVR learns state relevance from multi-view video-text similarity and turns it into state-dependent reward shaping for reinforcement learning."
     />
 
     <meta property="og:title" content="MVR: Multi-view Video Reward Shaping for Reinforcement Learning" />
     <meta
       property="og:description"
-      content="Learn state relevance from multi-view videos, then shape rewards to guide RL early and fade out as behavior improves."
+      content="Learn state relevance from multi-view videos and turn it into reward shaping that guides early exploration and fades as performance improves."
     />
     <meta property="og:type" content="website" />
 
@@ -39,7 +39,7 @@
             <span class="pill-hint">Project Page</span>
           </div>
 	          <div class="d-flex align-items-center gap-1 flex-wrap">
-	            <a class="nav-pill" href="#tldr">TL;DR</a>
+	            <a class="nav-pill" href="#tldr">Abstract</a>
 	            <a class="nav-pill" href="#overview">Overview</a>
 	            <a class="nav-pill" href="#method">Method</a>
 	            <a class="nav-pill" href="#results">Results</a>
@@ -52,9 +52,9 @@
       <header class="py-4">
         <div class="hero-card">
           <div class="hero-title">
-            <div class="kicker">Reinforcement Learning · Vision-Language Models · Reward Shaping · Multi-view Video</div>
+            <div class="kicker">Reinforcement Learning · Video-Language Models · Reward Shaping · Multi-view Videos</div>
             <h1 class="display-title">MVR: Multi-view Video Reward Shaping for Reinforcement Learning</h1>
-            <div class="hero-subtitle">Learn state relevance from multi-view videos, then shape rewards to guide RL early and fade out as behavior improves.</div>
+            <div class="hero-subtitle">Learn state relevance from multi-view videos and turn it into reward shaping that guides early exploration and fades as performance improves.</div>
           </div>
 
           <div class="hero-links">
@@ -103,11 +103,11 @@
 
       <main id="content" class="pb-5">
         <section class="section-card" id="tldr">
-          <h2 class="section-title">TL;DR</h2>
+          <h2 class="section-title">Abstract</h2>
           <p class="section-text mb-0">
-            MVR uses a frozen video-language model to score multi-view videos of agent behavior, learns a state-space relevance function via paired-comparison
-            matching and representation regularization, and turns it into state-dependent reward shaping that automatically reduces VLM influence once the
-            desired motion pattern is achieved.
+            MVR uses a frozen video-language model (VLM) to score multi-view trajectory videos, learns a state-space relevance function via paired-comparison
+            matching and representation regularization, and converts it into state-dependent reward shaping that automatically decays once the target motion
+            pattern is achieved.
           </p>
         </section>
 
@@ -118,23 +118,23 @@
             <div class="figure-title">Why multi-view videos?</div>
             <img class="img-fluid rounded" src="figures/teaser.png" alt="MVR teaser figure" />
             <div class="figure-caption">
-              Multi-view videos reduce occlusion and help evaluate dynamic motions. MVR shapes rewards to encourage desired motion patterns early, and then lets
-              task rewards dominate once the pattern is learned.
+              Multi-view videos reduce occlusion and viewpoint bias when evaluating dynamic skills. MVR uses them to learn a relevance function and shape rewards
+              early, then lets task rewards dominate once the behavior matches a high-scoring reference set.
             </div>
           </div>
 
           <div class="callouts">
             <div class="callout">
               <div class="k">Challenge</div>
-              <div class="v">Image-text similarity struggles with dynamic skills and can be viewpoint-biased; naively adding VLM scores can change the optimal policy.</div>
+              <div class="v">VLM similarity can be noisy and viewpoint-biased for dynamic skills; directly adding it to rewards may change the optimal policy.</div>
             </div>
             <div class="callout">
               <div class="k">Key Idea</div>
-              <div class="v">Learn a state relevance model from multi-view video-text similarity without regressing raw scores, by matching paired comparisons.</div>
+              <div class="v">Learn state relevance from multi-view video-text similarity via paired comparisons (Bradley–Terry), instead of regressing raw scores.</div>
             </div>
             <div class="callout">
               <div class="k">Reward Shaping</div>
-              <div class="v">Use a state-dependent shaping term that guides exploration early and automatically decays once behaviors align with a reference set.</div>
+              <div class="v">Use a state-dependent shaping term that helps exploration early and decays once trajectories become indistinguishable from a reference set.</div>
             </div>
           </div>
         </section>
@@ -143,15 +143,15 @@
           <h2 class="section-title">Method</h2>
 
           <p class="section-text">
-            MVR periodically renders recent trajectories into videos from multiple viewpoints, queries a video-language model for similarity and embeddings, and
-            uses them to update a state-space relevance function. The learned relevance then produces a shaped reward used by an online off-policy RL agent.
+            MVR periodically renders recent trajectories into multi-view videos, queries a frozen VLM for similarity scores and embeddings, and updates a
+            state-space relevance function. The learned relevance defines a shaped reward for online off-policy RL.
           </p>
 
           <div class="figure-card">
             <div class="figure-title">MVR framework</div>
             <img class="img-fluid rounded" src="figures/framework.png" alt="MVR framework figure" />
             <div class="figure-caption">
-              State relevance learning (paired-comparison matching + representation regularization) + policy learning with a shaped reward that uses a reference set.
+              MVR alternates between relevance learning (paired-comparison matching + representation regularization) and policy learning with a reference-set based shaped reward.
             </div>
           </div>
 
@@ -160,8 +160,8 @@
               <div class="figure-card h-100">
                 <div class="figure-title">State relevance learning</div>
                 <p class="section-text mb-0">
-                  To bridge the semantic gap between states and videos, MVR preserves the ordering induced by video-text similarity via a Bradley–Terry model, rather
-                  than regressing raw similarity scores in state space.
+                  Instead of regressing raw similarity scores in state space, MVR preserves the ordering induced by video-text comparisons via a Bradley–Terry
+                  model, and regularizes representations for stability.
                 </p>
               </div>
             </div>
@@ -169,8 +169,8 @@
               <div class="figure-card h-100">
                 <div class="figure-title">State-dependent reward shaping</div>
                 <p class="section-text mb-0">
-                  Visual guidance encourages reaching relevant states but weakens as the policy becomes “indistinguishable” from high-scoring reference behaviors,
-                  preventing persistent conflict with task objectives.
+                  Shaping guides the policy towards relevant states early, then fades as the policy becomes “indistinguishable” from high-scoring reference
+                  behaviors, reducing persistent conflict with task rewards.
                 </p>
               </div>
             </div>
@@ -180,7 +180,7 @@
 	        <section class="section-card" id="results">
 	          <h2 class="section-title">Results</h2>
 	          <p class="section-text">
-	            We evaluate MVR on 19 robotics tasks from HumanoidBench (humanoid locomotion) and MetaWorld (manipulation). Below are selected figures from the paper.
+	            We evaluate MVR on 19 robotics tasks from HumanoidBench (humanoid locomotion) and MetaWorld (manipulation). The figures below are from the paper.
 	          </p>
 
           <div class="row g-3">
@@ -208,7 +208,7 @@
 	        <section class="section-card" id="videos">
 	          <h2 class="section-title">Videos</h2>
 	          <p class="section-text">
-	            Qualitative comparison on HumanoidBench. Left: MVR succeeds at a challenging sit task. Right: TQC baseline fails under the same setting.
+	            Qualitative comparison on HumanoidBench. MVR succeeds on Sit_Hard, while TQC fails under the same setting.
 	          </p>
 	          <div class="row g-3">
 	            <div class="col-12 col-lg-6">
@@ -218,7 +218,7 @@
 	                  <source src="videos/mvr_success_h1hand_sit_hard_seed0.mp4" type="video/mp4" />
 	                  Your browser does not support the video tag.
 	                </video>
-	                <div class="figure-caption">Multi-view video reward shaping guides early learning, then fades as task objectives are satisfied.</div>
+	                <div class="figure-caption">MVR reaches the target sitting behavior; shaping fades as task rewards take over.</div>
 	              </div>
 	            </div>
 	            <div class="col-12 col-lg-6">
@@ -228,7 +228,7 @@
 	                  <source src="videos/tqc_failure_seed2_envseed0.mp4" type="video/mp4" />
 	                  Your browser does not support the video tag.
 	                </video>
-	                <div class="figure-caption">Baseline TQC fails to reach the desired behavior in this run.</div>
+	                <div class="figure-caption">TQC fails to discover the target behavior in this run.</div>
 	              </div>
 	            </div>
 	          </div>
@@ -237,7 +237,7 @@
 	        <section class="section-card" id="bibtex">
 	          <h2 class="section-title">BibTeX</h2>
 	          <div class="bibtex-toolbar">
-	            <div class="footer-note">If you find this work useful, please cite:</div>
+	            <div class="footer-note">If you find our work useful, please cite:</div>
 	            <button id="copyBibBtn" class="btn btn-sm btn-primary" type="button">
               <i class="fa-regular fa-copy"></i>
               Copy
@@ -262,7 +262,7 @@
         </section>
 
         <div class="mt-4 footer-note">
-          Built as a static site for GitHub Pages.
+          Built as a static project page for GitHub Pages.
         </div>
       </main>
     </div>
