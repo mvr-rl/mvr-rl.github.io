@@ -119,7 +119,7 @@
             <img class="img-fluid rounded" src="figures/teaser.png" alt="MVR teaser figure" />
             <div class="figure-caption">
               Multi-view videos reduce occlusion and viewpoint bias when evaluating dynamic skills. MVR uses them to learn a relevance function and shape rewards
-              early, then lets task rewards dominate once the behavior matches a high-scoring reference set.
+              early, then relies on task rewards once the behavior matches a high-scoring reference set.
             </div>
           </div>
 
@@ -218,7 +218,7 @@
 	                  <source src="videos/mvr_success_h1hand_sit_hard_seed0.mp4" type="video/mp4" />
 	                  Your browser does not support the video tag.
 	                </video>
-	                <div class="figure-caption">MVR reaches the target sitting behavior; shaping fades as task rewards take over.</div>
+	                <div class="figure-caption">MVR reaches the target sitting behavior; the shaping term decays as task rewards dominate.</div>
 	              </div>
 	            </div>
 	            <div class="col-12 col-lg-6">
@@ -228,7 +228,7 @@
 	                  <source src="videos/tqc_failure_seed2_envseed0.mp4" type="video/mp4" />
 	                  Your browser does not support the video tag.
 	                </video>
-	                <div class="figure-caption">TQC fails to discover the target behavior in this run.</div>
+	                <div class="figure-caption">TQC fails to reach the target behavior under the same setting.</div>
 	              </div>
 	            </div>
 	          </div>
