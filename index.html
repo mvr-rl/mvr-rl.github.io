@@ -38,15 +38,16 @@
             <span class="nav-brand">MVR</span>
             <span class="pill-hint">Project Page</span>
           </div>
-          <div class="d-flex align-items-center gap-1 flex-wrap">
-            <a class="nav-pill" href="#tldr">TL;DR</a>
-            <a class="nav-pill" href="#overview">Overview</a>
-            <a class="nav-pill" href="#method">Method</a>
-            <a class="nav-pill" href="#results">Results</a>
-            <a class="nav-pill" href="#bibtex">BibTeX</a>
-          </div>
-        </div>
-      </div>
+	          <div class="d-flex align-items-center gap-1 flex-wrap">
+	            <a class="nav-pill" href="#tldr">TL;DR</a>
+	            <a class="nav-pill" href="#overview">Overview</a>
+	            <a class="nav-pill" href="#method">Method</a>
+	            <a class="nav-pill" href="#results">Results</a>
+	            <a class="nav-pill" href="#videos">Videos</a>
+	            <a class="nav-pill" href="#bibtex">BibTeX</a>
+	          </div>
+	        </div>
+	      </div>
 
       <header class="py-4">
         <div class="hero-card">
@@ -176,11 +177,11 @@
           </div>
         </section>
 
-        <section class="section-card" id="results">
-          <h2 class="section-title">Results</h2>
-          <p class="section-text">
-            We evaluate MVR on 19 robotics tasks from HumanoidBench (humanoid locomotion) and MetaWorld (manipulation). Below are selected figures from the paper.
-          </p>
+	        <section class="section-card" id="results">
+	          <h2 class="section-title">Results</h2>
+	          <p class="section-text">
+	            We evaluate MVR on 19 robotics tasks from HumanoidBench (humanoid locomotion) and MetaWorld (manipulation). Below are selected figures from the paper.
+	          </p>
 
           <div class="row g-3">
             <div class="col-12 col-lg-6">
@@ -207,14 +208,43 @@
                 <img class="img-fluid rounded" src="figures/loss.png" alt="Loss figure" />
               </div>
             </div>
-          </div>
-        </section>
+	          </div>
+	        </section>
 
-        <section class="section-card" id="bibtex">
-          <h2 class="section-title">BibTeX</h2>
-          <div class="bibtex-toolbar">
-            <div class="footer-note">If you find this work useful, please cite:</div>
-            <button id="copyBibBtn" class="btn btn-sm btn-primary" type="button">
+	        <section class="section-card" id="videos">
+	          <h2 class="section-title">Videos</h2>
+	          <p class="section-text">
+	            Qualitative comparison on HumanoidBench. Left: MVR succeeds at a challenging sit task. Right: TQC baseline fails under the same setting.
+	          </p>
+	          <div class="row g-3">
+	            <div class="col-12 col-lg-6">
+	              <div class="figure-card h-100">
+	                <div class="figure-title">MVR (success): H1Hand Sit_Hard</div>
+	                <video class="w-100 rounded" controls muted playsinline autoplay loop preload="metadata">
+	                  <source src="videos/mvr_success_h1hand_sit_hard_seed0.mp4" type="video/mp4" />
+	                  Your browser does not support the video tag.
+	                </video>
+	                <div class="figure-caption">Multi-view video reward shaping guides early learning, then fades as task objectives are satisfied.</div>
+	              </div>
+	            </div>
+	            <div class="col-12 col-lg-6">
+	              <div class="figure-card h-100">
+	                <div class="figure-title">TQC (failure): Sit_Hard</div>
+	                <video class="w-100 rounded" controls muted playsinline autoplay loop preload="metadata">
+	                  <source src="videos/tqc_failure_seed2_envseed0.mp4" type="video/mp4" />
+	                  Your browser does not support the video tag.
+	                </video>
+	                <div class="figure-caption">Baseline TQC fails to reach the desired behavior in this run.</div>
+	              </div>
+	            </div>
+	          </div>
+	        </section>
+
+	        <section class="section-card" id="bibtex">
+	          <h2 class="section-title">BibTeX</h2>
+	          <div class="bibtex-toolbar">
+	            <div class="footer-note">If you find this work useful, please cite:</div>
+	            <button id="copyBibBtn" class="btn btn-sm btn-primary" type="button">
               <i class="fa-regular fa-copy"></i>
               Copy
             </button>
@@ -244,4 +274,3 @@
     </div>
   </body>
 </html>
-
