@@ -102,26 +102,35 @@
       </header>
 
       <main id="content" class="pb-5">
-        <section class="section-card" id="tldr">
-          <h2 class="section-title">Abstract</h2>
-          <p class="section-text mb-0">
-            MVR uses a frozen video-language model (VLM) to score multi-view trajectory videos, learns a state-space relevance function via paired-comparison
-            matching and representation regularization, and converts it into state-dependent reward shaping that automatically decays once the target motion
-            pattern is achieved.
-          </p>
-        </section>
+	        <section class="section-card" id="tldr">
+	          <h2 class="section-title">Abstract</h2>
+	          <p class="section-text mb-0">
+	            Reward design is of great importance for solving complex tasks with reinforcement learning. Recent studies have explored using image-text similarity
+	            produced by vision-language models (VLMs) to augment rewards of a task with visual feedback. A common practice linearly adds VLM scores to task or
+	            success rewards without explicit shaping, potentially altering the optimal policy. Moreover, such approaches, often relying on single static images,
+	            struggle with tasks whose desired behavior involves complex, dynamic motions spanning multiple visually different states. Furthermore, single
+	            viewpoints can occlude critical aspects of an agent's behavior. To address these issues, this paper presents Multi-View Video Reward Shaping (MVR),
+	            a framework that models the relevance of states regarding the target task using videos captured from multiple viewpoints. MVR leverages video-text
+	            similarity from a frozen pre-trained VLM to learn a state relevance function that mitigates the bias towards specific static poses inherent in
+	            image-based methods. Additionally, we introduce a state-dependent reward shaping formulation that integrates task-specific rewards and VLM-based
+	            guidance, automatically reducing the influence of VLM guidance once the desired motion pattern is achieved. We confirm the efficacy of the proposed
+	            framework with extensive experiments on challenging humanoid locomotion tasks from HumanoidBench and manipulation tasks from MetaWorld, verifying
+	            the design choices through ablation studies.
+	          </p>
+	        </section>
 
         <section class="section-card" id="overview">
           <h2 class="section-title">Overview</h2>
 
-          <div class="figure-card mb-3">
-            <div class="figure-title">Why multi-view videos?</div>
-            <img class="img-fluid rounded" src="figures/teaser.png" alt="MVR teaser figure" />
-            <div class="figure-caption">
-              Multi-view videos reduce occlusion and viewpoint bias when evaluating dynamic skills. MVR uses them to learn a relevance function and shape rewards
-              early, then relies on task rewards once the behavior matches a high-scoring reference set.
-            </div>
-          </div>
+	          <div class="figure-card mb-3">
+	            <div class="figure-title">Why reward shaping?</div>
+	            <img class="img-fluid rounded" src="figures/teaser.png" alt="MVR teaser figure" />
+	            <div class="figure-caption">
+	              Directly adding VLM similarity to rewards can change the optimal policy and is brittle for dynamic skills. MVR learns state relevance from
+	              multi-view trajectory videos (reducing occlusion and viewpoint bias) and turns it into a state-dependent reward shaping term that guides
+	              exploration early and fades away once the desired motion pattern is achieved.
+	            </div>
+	          </div>
 
           <div class="callouts">
             <div class="callout">
